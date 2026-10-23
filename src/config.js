@@ -26,16 +26,19 @@ export const WEDDING_CONFIG = {
       events: {
         haldi: {
           name: "Haldi Ceremony",
+          date: "2026-11-25",
           time: "11:00 AM",
           place: "M20 Garden and Resort",
         },
         sangeet: {
           name: "Sangeet Ceremony",
+          date: "2026-11-25",
           time: "7:00 PM",
           place: "M20 Garden and Resort",
         },
         reception: {
           name: "Wedding Ceremony & Reception",
+          date: "2026-11-26",
           time: "9:00 PM",
           place: "M20 Garden and Resort",
         },
@@ -63,16 +66,19 @@ export const WEDDING_CONFIG = {
       events: {
         haldi: {
           name: "हल्दी समारोह",
+          date: "2026-11-25",
           time: "सुबह 11 बजे",
           place: "एम20 गार्डन एंड रिसॉर्ट",
         },
         sangeet: {
           name: "संगीत समारोह",
+          date: "2026-11-25",
           time: "शाम 7 बजे",
           place: "एम20 गार्डन एंड रिसॉर्ट",
         },
         reception: {
           name: "शुभ विवाह एवं स्वागत समारोह",
+          date: "2026-11-26",
           time: "रात 9 बजे",
           place: "एम20 गार्डन एंड रिसॉर्ट",
         },

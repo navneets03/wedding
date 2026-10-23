@@ -1,5 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ArrowDown, ArrowUpRight, MapPin, Clock3, Heart, Menu, X } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  MapPin,
+  Clock3,
+  Heart,
+  Menu,
+  X,
+  CalendarDays,
+} from "lucide-react";
 import { WEDDING_CONFIG } from "./config.js";
 
 const copy = {
@@ -190,8 +199,11 @@ function Petals() {
 }
 
 function EventCard({ event, language, index }) {
-  const details = WEDDING_CONFIG.events?.[event.id];
   const isHindi = language === "hi";
+
+  // Get event details from the selected language
+  const languageConfig = WEDDING_CONFIG.languages[language];
+  const details = languageConfig?.events?.[event.id];
 
   const eventTime =
     details?.time ||
@@ -201,7 +213,16 @@ function EventCard({ event, language, index }) {
       reception: "9:00 PM",
     }[event.id];
 
-  const venueName = details?.place || WEDDING_CONFIG.venueName || "M20 Garden and Resort";
+  const venueName = details?.place || languageConfig?.venueName || "M20 Garden and Resort";
+
+  // Format the date for the selected language
+  const eventDate = details?.date
+    ? new Date(`${details.date}T12:00:00`).toLocaleDateString(isHindi ? "hi-IN" : "en-IN", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : null;
 
   return (
     <article
@@ -221,6 +242,13 @@ function EventCard({ event, language, index }) {
       <p className="event-desc">{event.desc[isHindi ? 1 : 0]}</p>
 
       <div className="event-meta">
+        {eventDate && (
+          <div className="event-meta-item">
+            <CalendarDays size={15} />
+            <span>{eventDate}</span>
+          </div>
+        )}
+
         <div className="event-meta-item">
           <Clock3 size={15} />
           <span>
@@ -236,7 +264,7 @@ function EventCard({ event, language, index }) {
 
         <div className="event-meta-item">
           <MapPin size={15} />
-          <span>{isHindi ? "एम20 गार्डन एंड रिसॉर्ट" : venueName}</span>
+          <span>{venueName}</span>
         </div>
       </div>
     </article>
