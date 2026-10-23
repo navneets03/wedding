@@ -450,7 +450,7 @@ export default function App() {
           <div className="hero-image-wrap reveal-right" data-reveal>
             <img
               className="hero-img"
-              src="/hero.png"
+              src={`${import.meta.env.BASE_URL}hero.png`}
               alt={t("Navneet and Muskan", "नवनीत और मुस्कान")}
             />
           </div>
@@ -515,7 +515,7 @@ export default function App() {
           <div className="venue-container">
             <div className="venue-image reveal-left" data-reveal>
               <img
-                src="/decor.png"
+                src={`${import.meta.env.BASE_URL}decor.png`}
                 alt={t("Wedding venue for Navneet and Muskan", "नवनीत और मुस्कान का विवाह स्थल")}
                 loading="lazy"
               />
