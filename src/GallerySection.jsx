@@ -20,6 +20,7 @@ const photos = [
 
 export default function GallerySection({ language = "en" }) {
   const carouselRef = useRef(null);
+  const lightboxRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(3);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
@@ -78,7 +79,9 @@ export default function GallerySection({ language = "en" }) {
 
     const gap = parseFloat(getComputedStyle(carousel).columnGap) || 0;
     const distance = firstCard.getBoundingClientRect().width + gap;
-    setActiveIndex(Math.round(carousel.scrollLeft / distance));
+    if (distance > 0) {
+      setActiveIndex(Math.round(carousel.scrollLeft / distance));
+    }
   };
 
   const maxIndex = Math.max(0, photos.length - visibleCount);
@@ -97,7 +100,7 @@ export default function GallerySection({ language = "en" }) {
     const gap = parseFloat(getComputedStyle(carousel).columnGap) || 0;
     const distance = firstCard.getBoundingClientRect().width + gap;
     carousel.scrollTo({ left: activeIndex * distance, behavior: "smooth" });
-  }, [visibleCount]);
+  }, [visibleCount]); // Keep the carousel position aligned after breakpoint changes.
 
   const moveLightbox = (direction) => {
     if (!selectedPhoto) return;
@@ -105,6 +108,43 @@ export default function GallerySection({ language = "en" }) {
     setZoom(1);
     setSelectedPhoto(photos[(index + direction + photos.length) % photos.length]);
   };
+
+  // Keep the lightbox fitted to the *visual* viewport, including when the
+  // visitor has pinch-zoomed the webpage before opening the image.
+  useEffect(() => {
+    if (!selectedPhoto) return undefined;
+
+    const lightbox = lightboxRef.current;
+    const viewport = window.visualViewport;
+
+    const updateVisualViewport = () => {
+      if (!lightbox) return;
+
+      if (window.visualViewport) {
+        const vv = window.visualViewport;
+        lightbox.style.setProperty("--lightbox-left", `${vv.offsetLeft}px`);
+        lightbox.style.setProperty("--lightbox-top", `${vv.offsetTop}px`);
+        lightbox.style.setProperty("--lightbox-width", `${vv.width}px`);
+        lightbox.style.setProperty("--lightbox-height", `${vv.height}px`);
+      } else {
+        lightbox.style.setProperty("--lightbox-left", "0px");
+        lightbox.style.setProperty("--lightbox-top", "0px");
+        lightbox.style.setProperty("--lightbox-width", "100vw");
+        lightbox.style.setProperty("--lightbox-height", "100dvh");
+      }
+    };
+
+    updateVisualViewport();
+    viewport?.addEventListener("resize", updateVisualViewport);
+    viewport?.addEventListener("scroll", updateVisualViewport);
+    window.addEventListener("resize", updateVisualViewport);
+
+    return () => {
+      viewport?.removeEventListener("resize", updateVisualViewport);
+      viewport?.removeEventListener("scroll", updateVisualViewport);
+      window.removeEventListener("resize", updateVisualViewport);
+    };
+  }, [selectedPhoto]);
 
   useEffect(() => {
     if (!selectedPhoto) return undefined;
@@ -119,14 +159,14 @@ export default function GallerySection({ language = "en" }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedPhoto]);
 
+  // Lock background scrolling while preserving the exact page position.
   useEffect(() => {
-    if (!selectedPhoto) return;
+    if (!selectedPhoto) return undefined;
 
     const scrollY = window.scrollY;
     const body = document.body;
     const html = document.documentElement;
 
-    // Save the existing styles
     const previousBodyStyles = {
       position: body.style.position,
       top: body.style.top,
@@ -135,10 +175,8 @@ export default function GallerySection({ language = "en" }) {
       width: body.style.width,
       overflow: body.style.overflow,
     };
-
     const previousHtmlOverflow = html.style.overflow;
 
-    // Lock the page at its current position
     body.style.position = "fixed";
     body.style.top = `-${scrollY}px`;
     body.style.left = "0";
@@ -148,16 +186,9 @@ export default function GallerySection({ language = "en" }) {
     html.style.overflow = "hidden";
 
     return () => {
-      // Restore the original styles
       Object.assign(body.style, previousBodyStyles);
       html.style.overflow = previousHtmlOverflow;
-
-      // Return to the exact section and position
-      window.scrollTo({
-        top: scrollY,
-        left: 0,
-        behavior: "instant",
-      });
+      window.scrollTo({ top: scrollY, left: 0, behavior: "auto" });
     };
   }, [selectedPhoto]);
 
@@ -216,7 +247,7 @@ export default function GallerySection({ language = "en" }) {
                 aria-label={`View ${photo.alt}`}
               >
                 <div className="gallery-image-wrap">
-                  <img src={photo.src} alt={photo.alt} loading="lazy" />
+                  <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
                   <div className="gallery-image-overlay">
                     <span className="gallery-photo-number">{photo.number}</span>
                     <span className="gallery-view-label">
@@ -272,6 +303,7 @@ export default function GallerySection({ language = "en" }) {
 
       {selectedPhoto && (
         <div
+          ref={lightboxRef}
           className="gallery-lightbox"
           onClick={closeLightbox}
           role="dialog"
@@ -286,6 +318,7 @@ export default function GallerySection({ language = "en" }) {
               closeLightbox();
             }}
             aria-label="Close photo"
+            title="Close photo"
           >
             ×
           </button>
@@ -308,17 +341,29 @@ export default function GallerySection({ language = "en" }) {
             className="lightbox-image"
             style={{ transform: `scale(${zoom})` }}
             onClick={(event) => event.stopPropagation()}
+            draggable="false"
           />
 
-          {/* Stop clicks here from reaching the overlay, which closes the lightbox. */}
           <div className="gallery-zoom-controls" onClick={(event) => event.stopPropagation()}>
-            <button type="button" onClick={zoomOut} disabled={zoom <= 1} aria-label="Zoom out">
+            <button
+              type="button"
+              onClick={zoomOut}
+              disabled={zoom <= 1}
+              aria-label="Zoom out"
+              title="Zoom out"
+            >
               −
             </button>
 
             <span>{Math.round(zoom * 100)}%</span>
 
-            <button type="button" onClick={zoomIn} disabled={zoom >= 3} aria-label="Zoom in">
+            <button
+              type="button"
+              onClick={zoomIn}
+              disabled={zoom >= 3}
+              aria-label="Zoom in"
+              title="Zoom in"
+            >
               +
             </button>
 
@@ -327,6 +372,7 @@ export default function GallerySection({ language = "en" }) {
               className="gallery-control-reset"
               onClick={resetZoom}
               aria-label="Reset zoom"
+              title="Reset zoom"
             >
               <RotateCcw size={18} />
             </button>
