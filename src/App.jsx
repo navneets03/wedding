@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+
 import {
   ArrowDown,
   ArrowUpRight,
@@ -9,35 +10,54 @@ import {
   X,
   CalendarDays,
 } from "lucide-react";
+
 import { WEDDING_CONFIG } from "./config.js";
+
+import GallerySection from "./GallerySection.jsx";
 
 const copy = {
   nav: [
     { href: "#home", en: "Home", hi: "मुख्य पृष्ठ" },
+
     { href: "#story", en: "Our Story", hi: "हमारी कहानी" },
+
     { href: "#events", en: "Events", hi: "विवाह के कार्यक्रम" },
+
+    { href: "#gallery", en: "Gallery", hi: "गैलरी" },
+
     { href: "#venue", en: "Venue", hi: "विवाह स्थल" },
   ],
 
   shayari: [
     {
       icon: "✿",
+
       en: "With you, every moment is a celebration, with you, life glows bright. Where would I go without you? You are my sky, my everything.",
+
       hi: "तुम हो तो हर पल में जश्न है, तुम हो तो ज़िंदगी रोशन है। कहाँ जाऊँगा बिन तुम्हारे मैं, तुम ही तो मेरा आसमान हो।।",
     },
+
     {
       icon: "❁",
+
       en: "Your name brings a smile to my lips, lost in your memory are all my dreams. Love doesn't happen by chance, it blooms when two hearts meet as one.",
+
       hi: "नाम लिया तुम्हारा तो होंठों पे खिली मुस्कान, तुम्हारी याद में खो गया हर अरमान, मोहब्बत यूँ ही नहीं होती यारों, मिलते हैं जब दो दिल एक समान।।",
     },
+
     {
       icon: "♥",
+
       en: "Not just a day, not just a celebration — a lifetime of choosing each other, again and again.",
+
       hi: "सिर्फ एक दिन नहीं, सिर्फ एक जश्न नहीं — हर दिन, हर पल, एक-दूसरे को चुनने का वादा।",
     },
+
     {
       icon: "◈",
+
       en: "Two families, two journeys, one beautiful beginning. May our days be filled with love and our home with laughter.",
+
       hi: "दो परिवार, दो सफ़र, एक खूबसूरत शुरुआत। हमारी ज़िंदगी प्यार और हमारा घर खुशियों से भरा रहे।",
     },
   ],
@@ -45,33 +65,51 @@ const copy = {
   events: [
     {
       id: "haldi",
+
       icon: "🌼",
+
       ribbon: ["The festivities begin", "समारोह की शुरुआत"],
+
       name: ["Haldi Ceremony", "हल्दी समारोह"],
+
       desc: [
         "A joyful celebration filled with sunshine, laughter, blessings, and shades of yellow.",
+
         "धूप, हँसी, आशीर्वाद और पीले रंगों से सजा खुशियों भरा समारोह।",
       ],
     },
+
     {
       id: "sangeet",
+
       icon: "🎵",
+
       ribbon: ["A Musical Celebration", "संगीतमय उत्सव"],
+
       name: ["Sangeet Night", "संगीत संध्या"],
+
       desc: [
         "Join us for a night of music, dance, laughter, and memories with the people we love.",
+
         "संगीत, नृत्य, हँसी और अपनों के साथ यादगार पलों से भरी शाम में हमारे साथ शामिल हों।",
       ],
     },
+
     {
       id: "reception",
+
       icon: "✨",
+
       ribbon: ["An evening of joy", "खुशियों भरी शाम"],
+
       name: ["Reception", "स्वागत समारोह"],
+
       desc: [
         "An evening of warm wishes, delicious food, music, and memories to treasure.",
+
         "शुभकामनाओं, स्वादिष्ट भोजन, संगीत और यादगार लम्हों से भरी शाम।",
       ],
+
       featured: true,
     },
   ],
@@ -94,26 +132,34 @@ function Petals() {
     }
 
     const canvas = document.getElementById("petals-canvas");
+
     const ctx = canvas?.getContext("2d");
 
     if (!canvas || !ctx) return;
 
     let width = 0;
+
     let height = 0;
+
     let frame = 0;
 
     const count = window.innerWidth < 700 ? 14 : 25;
+
     const petals = [];
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
       width = window.innerWidth;
+
       height = window.innerHeight;
 
       canvas.width = Math.round(width * dpr);
+
       canvas.height = Math.round(height * dpr);
+
       canvas.style.width = `${width}px`;
+
       canvas.style.height = `${height}px`;
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -121,13 +167,21 @@ function Petals() {
 
     const makePetal = (randomY = false) => ({
       x: Math.random() * width,
+
       y: randomY ? Math.random() * height : -20,
+
       size: 3 + Math.random() * 5,
+
       speedY: 0.35 + Math.random() * 0.9,
+
       speedX: -0.35 + Math.random() * 0.7,
+
       rotation: Math.random() * Math.PI * 2,
+
       rotationSpeed: -0.015 + Math.random() * 0.03,
+
       alpha: 0.22 + Math.random() * 0.38,
+
       sway: Math.random() * 0.02,
     });
 
@@ -144,18 +198,27 @@ function Petals() {
 
       petals.forEach((p) => {
         p.y += p.speedY;
+
         p.x += p.speedX + Math.sin(p.y * p.sway) * 0.35;
+
         p.rotation += p.rotationSpeed;
 
         ctx.save();
+
         ctx.translate(p.x, p.y);
+
         ctx.rotate(p.rotation);
+
         ctx.globalAlpha = p.alpha;
+
         ctx.fillStyle = "#D8B66A";
 
         ctx.beginPath();
+
         ctx.ellipse(0, 0, p.size * 0.55, p.size, 0, 0, Math.PI * 2);
+
         ctx.fill();
+
         ctx.restore();
 
         if (p.y > height + 20 || p.x < -20 || p.x > width + 20) {
@@ -169,11 +232,14 @@ function Petals() {
     };
 
     resize();
+
     reset();
+
     draw();
 
     const onResize = () => {
       resize();
+
       reset();
     };
 
@@ -186,11 +252,14 @@ function Petals() {
     };
 
     window.addEventListener("resize", onResize, { passive: true });
+
     document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       cancelAnimationFrame(frame);
+
       window.removeEventListener("resize", onResize);
+
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, []);
@@ -202,24 +271,31 @@ function EventCard({ event, language, index }) {
   const isHindi = language === "hi";
 
   // Get event details from the selected language
+
   const languageConfig = WEDDING_CONFIG.languages[language];
+
   const details = languageConfig?.events?.[event.id];
 
   const eventTime =
     details?.time ||
     {
       haldi: "11:00 AM",
+
       sangeet: "7:00 PM",
+
       reception: "9:00 PM",
     }[event.id];
 
   const venueName = details?.place || languageConfig?.venueName || "M20 Garden and Resort";
 
   // Format the date for the selected language
+
   const eventDate = details?.date
     ? new Date(`${details.date}T12:00:00`).toLocaleDateString(isHindi ? "hi-IN" : "en-IN", {
         day: "numeric",
+
         month: "long",
+
         year: "numeric",
       })
     : null;
@@ -245,12 +321,14 @@ function EventCard({ event, language, index }) {
         {eventDate && (
           <div className="event-meta-item">
             <CalendarDays size={15} />
+
             <span>{eventDate}</span>
           </div>
         )}
 
         <div className="event-meta-item">
           <Clock3 size={15} />
+
           <span>
             {eventTime
               ? isHindi
@@ -264,6 +342,7 @@ function EventCard({ event, language, index }) {
 
         <div className="event-meta-item">
           <MapPin size={15} />
+
           <span>{venueName}</span>
         </div>
       </div>
@@ -275,14 +354,19 @@ export default function App() {
   const [language, setLanguage] = useState(WEDDING_CONFIG.defaultLanguage === "hi" ? "hi" : "en");
 
   const [menuOpen, setMenuOpen] = useState(false);
+
   const [scrolled, setScrolled] = useState(false);
+
   const [activeSection, setActiveSection] = useState("home");
+
   const [now, setNow] = useState(Date.now());
 
   const weddingDate = useMemo(() => new Date(WEDDING_CONFIG.weddingDate), []);
 
   const validDate = !Number.isNaN(weddingDate.getTime());
+
   const isHindi = language === "hi";
+
   const locale = isHindi ? "hi-IN" : "en-IN";
 
   const t = (en, hi) => (isHindi ? hi : en);
@@ -290,18 +374,23 @@ export default function App() {
   const dateText = validDate
     ? formatDate(
         weddingDate,
+
         {
           weekday: "long",
+
           day: "numeric",
+
           month: "long",
+
           year: "numeric",
         },
+
         locale,
       )
     : t("Please set the wedding date in config.js", "कृपया config.js में शादी की तारीख सेट करें");
 
   const mapQuery = encodeURIComponent(
-    `${WEDDING_CONFIG.venueName}, ${WEDDING_CONFIG.venueAddress}`,
+    `${WEDDING_CONFIG.languages.en.venueName}, ${WEDDING_CONFIG.languages.en.venueAddress}`,
   );
 
   useEffect(() => {
@@ -314,28 +403,34 @@ export default function App() {
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
+
     onScroll();
 
     return () => {
       window.clearInterval(timer);
+
       window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
   useEffect(() => {
     document.documentElement.lang = language;
+
     document.body.classList.toggle("en-mode", language === "en");
   }, [language]);
 
   useEffect(() => {
     const nodes = document.querySelectorAll("[data-reveal]");
 
-    const navSections = ["home", "story", "events", "venue"]
+    const navSections = ["home", "story", "events", "gallery", "venue", "countdown"]
+
       .map((id) => document.getElementById(id))
+
       .filter(Boolean);
 
     if (!("IntersectionObserver" in window)) {
       nodes.forEach((node) => node.classList.add("visible"));
+
       return;
     }
 
@@ -344,10 +439,12 @@ export default function App() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("visible");
+
             observer.unobserve(entry.target);
           }
         });
       },
+
       { threshold: 0.12 },
     );
 
@@ -361,6 +458,7 @@ export default function App() {
           }
         });
       },
+
       { rootMargin: "-35% 0px -55% 0px" },
     );
 
@@ -368,17 +466,22 @@ export default function App() {
 
     return () => {
       revealObserver.disconnect();
+
       sectionObserver.disconnect();
     };
   }, []);
 
   const daysLeft = validDate ? weddingDate.getTime() - now : NaN;
+
   const totalSeconds = Math.max(0, Math.floor(daysLeft / 1000));
 
   const countdown = {
     days: Math.floor(totalSeconds / 86400),
+
     hours: Math.floor((totalSeconds % 86400) / 3600),
+
     minutes: Math.floor((totalSeconds % 3600) / 60),
+
     seconds: totalSeconds % 60,
   };
 
@@ -433,6 +536,7 @@ export default function App() {
       <main>
         <section className="hero" id="home">
           <div className="hero-overlay" aria-hidden="true" />
+
           <div className="hero-particles" aria-hidden="true" />
 
           <div className="hero-content reveal-up" data-reveal>
@@ -445,6 +549,7 @@ export default function App() {
 
               <div className="ampersand-wrap">
                 <span className="ampersand">&amp;</span>
+
                 <div className="rings-icon">
                   <span className="sparkle">💍</span>
                 </div>
@@ -471,6 +576,7 @@ export default function App() {
 
             <a className="hero-btn" href="#events">
               <span>{t("Celebrate with us", "हमारे साथ जश्न मनाएँ")}</span>
+
               <ArrowDown />
             </a>
           </div>
@@ -513,6 +619,7 @@ export default function App() {
                 data-reveal
               >
                 <div className="shayari-deco">{item.icon}</div>
+
                 <p className="shayari-text">{t(item.en, item.hi)}</p>
               </article>
             ))}
@@ -538,6 +645,10 @@ export default function App() {
             ))}
           </div>
         </section>
+
+        <div id="gallery">
+          <GallerySection language={language} />
+        </div>
 
         <section className="venue-section" id="venue">
           <div className="venue-container">
@@ -565,6 +676,7 @@ export default function App() {
               <p className="venue-description">
                 {t(
                   "With the blessings of our families, we invite you to join us as we celebrate the beginning of our forever in a beautiful setting filled with love, laughter, and cherished memories.",
+
                   "अपने परिवारों के आशीर्वाद के साथ, हम आपको अपने जीवन की इस खूबसूरत शुरुआत में शामिल होने के लिए सादर आमंत्रित करते हैं।",
                 )}
               </p>
@@ -577,6 +689,7 @@ export default function App() {
 
                   <div>
                     <h3>{t("Wedding Day", "विवाह का दिन")}</h3>
+
                     <p>{dateText}</p>
                   </div>
                 </div>
@@ -616,11 +729,12 @@ export default function App() {
 
               <a
                 className="venue-btn"
-                href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+                href={`https\://www.google.com/maps/search/?api=1&query=${mapQuery}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <span>{t("Get Directions", "रास्ता देखें")}</span>
+
                 <ArrowUpRight />
               </a>
             </div>
@@ -654,14 +768,21 @@ export default function App() {
                     {t(
                       {
                         days: "Days",
+
                         hours: "Hours",
+
                         minutes: "Minutes",
+
                         seconds: "Seconds",
                       }[unit],
+
                       {
                         days: "दिन",
+
                         hours: "घंटे",
+
                         minutes: "मिनट",
+
                         seconds: "सेकंड",
                       }[unit],
                     )}
@@ -677,6 +798,7 @@ export default function App() {
             {!validDate
               ? t(
                   "Please set the wedding date in config.js",
+
                   "कृपया config.js में शादी की तारीख सेट करें",
                 )
               : isPast
@@ -689,8 +811,11 @@ export default function App() {
       <footer className="footer">
         <div className="footer-mandala" aria-hidden="true">
           <span className="mandala-ring r1" />
+
           <span className="mandala-ring r2" />
+
           <span className="mandala-ring r3" />
+
           <span className="mandala-center">N &amp; M</span>
         </div>
 
@@ -707,6 +832,7 @@ export default function App() {
         <p className="footer-quote">
           {t(
             "“Two souls, one heart, one beautiful forever.”",
+
             "“दो रूहें, एक दिल, एक खूबसूरत हमेशा”",
           )}
         </p>

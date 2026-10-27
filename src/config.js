@@ -1,6 +1,6 @@
 
 export const WEDDING_CONFIG = {
-  weddingDate: "2026-11-26T18:00:00",
+  weddingDate: "2026-11-26T19:00:00",
 
   defaultLanguage: "en",
 
@@ -19,6 +19,7 @@ export const WEDDING_CONFIG = {
         home: "Home",
         story: "Our Story",
         events: "Wedding Events",
+        gallery: "Gallery",
         venue: "Venue",
         countdown: "Countdown",
       },
@@ -59,6 +60,7 @@ export const WEDDING_CONFIG = {
         home: "मुख्य पृष्ठ",
         story: "हमारी कहानी",
         events: "विवाह के कार्यक्रम",
+        gallery: "गैलरी",
         venue: "विवाह स्थल",
         countdown: "उलटी गिनती",
       },
