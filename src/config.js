@@ -40,7 +40,7 @@ export const WEDDING_CONFIG = {
         reception: {
           name: "Wedding Ceremony & Reception",
           date: "2026-11-26",
-          time: "9:00 PM",
+          time: "7:00 PM",
           place: "M20 Garden and Resort",
         },
       },
@@ -81,7 +81,7 @@ export const WEDDING_CONFIG = {
         reception: {
           name: "शुभ विवाह एवं स्वागत समारोह",
           date: "2026-11-26",
-          time: "रात 9 बजे",
+          time: "शाम 7 बजे",
           place: "एम20 गार्डन एंड रिसॉर्ट",
         },
       },

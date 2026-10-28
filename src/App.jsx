@@ -283,7 +283,7 @@ function EventCard({ event, language, index }) {
 
       sangeet: "7:00 PM",
 
-      reception: "9:00 PM",
+      reception: "7:00 PM",
     }[event.id];
 
   const venueName = details?.place || languageConfig?.venueName || "M20 Garden and Resort";
