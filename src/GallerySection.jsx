@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { Camera, ChevronLeft, ChevronRight, Images, RotateCcw } from "lucide-react";
+import { Camera, ChevronLeft, ChevronRight, Images } from "lucide-react";
 import "./GallerySection.css";
 
-import couple1 from "./assets/gallery/one.png";
-import couple2 from "./assets/gallery/two.png";
-import couple3 from "./assets/gallery/three.png";
-import couple4 from "./assets/gallery/four.png";
-import couple5 from "./assets/gallery/five.png";
-import couple6 from "./assets/gallery/six.png";
+import couple1 from "./assets/gallery/one.webp";
+import couple2 from "./assets/gallery/two.webp";
+import couple3 from "./assets/gallery/three.webp";
+import couple4 from "./assets/gallery/four.webp";
+import couple5 from "./assets/gallery/five.webp";
+import couple6 from "./assets/gallery/six.webp";
 
 const photos = [
   { src: couple1, alt: "A beautiful couple moment", number: "01" },
@@ -20,177 +20,58 @@ const photos = [
 
 export default function GallerySection({ language = "en" }) {
   const carouselRef = useRef(null);
-  const lightboxRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(3);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const [zoom, setZoom] = useState(1);
-
   const isHindi = language === "hi";
+  const maxIndex = Math.max(0, photos.length - visibleCount);
 
-  const zoomIn = () => setZoom((prev) => Math.min(prev + 0.25, 3));
-  const zoomOut = () => setZoom((prev) => Math.max(prev - 0.25, 1));
-  const resetZoom = () => setZoom(1);
-
-  const openPhoto = (photo) => {
-    setZoom(1);
-    setSelectedPhoto(photo);
+  const getStep = () => {
+    const carousel = carouselRef.current;
+    const firstCard = carousel?.querySelector(".gallery-card");
+    if (!carousel || !firstCard) return 0;
+    const gap = parseFloat(getComputedStyle(carousel).columnGap) || 0;
+    return firstCard.getBoundingClientRect().width + gap;
   };
 
-  const closeLightbox = () => {
-    setSelectedPhoto(null);
-    setZoom(1);
+  const goToIndex = (index, behavior = "smooth") => {
+    const carousel = carouselRef.current;
+    const step = getStep();
+    if (!carousel || !step) return;
+    const target = Math.max(0, Math.min(index, maxIndex));
+    setActiveIndex(target);
+    carousel.scrollTo({ left: target * step, behavior });
+  };
+
+  const handleScroll = () => {
+    const carousel = carouselRef.current;
+    const step = getStep();
+    if (!carousel || !step) return;
+    setActiveIndex(Math.max(0, Math.min(Math.round(carousel.scrollLeft / step), maxIndex)));
   };
 
   useEffect(() => {
     const updateVisibleCount = () => {
-      if (window.innerWidth <= 600) {
-        setVisibleCount(1);
-      } else if (window.innerWidth <= 900) {
-        setVisibleCount(2);
-      } else {
-        setVisibleCount(3);
-      }
+      const width = window.innerWidth;
+      setVisibleCount(width <= 600 ? 1 : width <= 900 ? 2 : 3);
     };
-
     updateVisibleCount();
     window.addEventListener("resize", updateVisibleCount);
     return () => window.removeEventListener("resize", updateVisibleCount);
   }, []);
 
-  const scrollCarousel = (direction) => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    const firstCard = carousel.querySelector(".gallery-card");
-    if (!firstCard) return;
-
-    const gap = parseFloat(getComputedStyle(carousel).columnGap) || 0;
-    const distance = firstCard.getBoundingClientRect().width + gap;
-    carousel.scrollBy({ left: direction * distance, behavior: "smooth" });
-  };
-
-  const handleScroll = () => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    const firstCard = carousel.querySelector(".gallery-card");
-    if (!firstCard) return;
-
-    const gap = parseFloat(getComputedStyle(carousel).columnGap) || 0;
-    const distance = firstCard.getBoundingClientRect().width + gap;
-    if (distance > 0) {
-      setActiveIndex(Math.round(carousel.scrollLeft / distance));
-    }
-  };
-
-  const maxIndex = Math.max(0, photos.length - visibleCount);
-
-  useEffect(() => {
-    if (activeIndex > maxIndex) setActiveIndex(maxIndex);
-  }, [activeIndex, maxIndex]);
-
   useEffect(() => {
     const carousel = carouselRef.current;
     if (!carousel) return;
-
     const firstCard = carousel.querySelector(".gallery-card");
     if (!firstCard) return;
-
     const gap = parseFloat(getComputedStyle(carousel).columnGap) || 0;
-    const distance = firstCard.getBoundingClientRect().width + gap;
-    carousel.scrollTo({ left: activeIndex * distance, behavior: "smooth" });
-  }, [visibleCount]); // Keep the carousel position aligned after breakpoint changes.
-
-  const moveLightbox = (direction) => {
-    if (!selectedPhoto) return;
-    const index = photos.findIndex((photo) => photo.src === selectedPhoto.src);
-    setZoom(1);
-    setSelectedPhoto(photos[(index + direction + photos.length) % photos.length]);
-  };
-
-  // Keep the lightbox fitted to the *visual* viewport, including when the
-  // visitor has pinch-zoomed the webpage before opening the image.
-  useEffect(() => {
-    if (!selectedPhoto) return undefined;
-
-    const lightbox = lightboxRef.current;
-    const viewport = window.visualViewport;
-
-    const updateVisualViewport = () => {
-      if (!lightbox) return;
-
-      if (window.visualViewport) {
-        const vv = window.visualViewport;
-        lightbox.style.setProperty("--lightbox-left", `${vv.offsetLeft}px`);
-        lightbox.style.setProperty("--lightbox-top", `${vv.offsetTop}px`);
-        lightbox.style.setProperty("--lightbox-width", `${vv.width}px`);
-        lightbox.style.setProperty("--lightbox-height", `${vv.height}px`);
-      } else {
-        lightbox.style.setProperty("--lightbox-left", "0px");
-        lightbox.style.setProperty("--lightbox-top", "0px");
-        lightbox.style.setProperty("--lightbox-width", "100vw");
-        lightbox.style.setProperty("--lightbox-height", "100dvh");
-      }
-    };
-
-    updateVisualViewport();
-    viewport?.addEventListener("resize", updateVisualViewport);
-    viewport?.addEventListener("scroll", updateVisualViewport);
-    window.addEventListener("resize", updateVisualViewport);
-
-    return () => {
-      viewport?.removeEventListener("resize", updateVisualViewport);
-      viewport?.removeEventListener("scroll", updateVisualViewport);
-      window.removeEventListener("resize", updateVisualViewport);
-    };
-  }, [selectedPhoto]);
-
-  useEffect(() => {
-    if (!selectedPhoto) return undefined;
-
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") closeLightbox();
-      if (event.key === "ArrowRight") moveLightbox(1);
-      if (event.key === "ArrowLeft") moveLightbox(-1);
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedPhoto]);
-
-  // Lock background scrolling while preserving the exact page position.
-  useEffect(() => {
-    if (!selectedPhoto) return undefined;
-
-    const scrollY = window.scrollY;
-    const body = document.body;
-    const html = document.documentElement;
-
-    const previousBodyStyles = {
-      position: body.style.position,
-      top: body.style.top,
-      left: body.style.left,
-      right: body.style.right,
-      width: body.style.width,
-      overflow: body.style.overflow,
-    };
-    const previousHtmlOverflow = html.style.overflow;
-
-    body.style.position = "fixed";
-    body.style.top = `-${scrollY}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.width = "100%";
-    body.style.overflow = "hidden";
-    html.style.overflow = "hidden";
-
-    return () => {
-      Object.assign(body.style, previousBodyStyles);
-      html.style.overflow = previousHtmlOverflow;
-      window.scrollTo({ top: scrollY, left: 0, behavior: "auto" });
-    };
-  }, [selectedPhoto]);
+    const step = firstCard.getBoundingClientRect().width + gap;
+    const target = Math.min(activeIndex, maxIndex);
+    carousel.scrollTo({ left: target * step, behavior: "instant" });
+    if (target !== activeIndex) setActiveIndex(target);
+    // Align carousel only when the number of visible cards changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleCount, maxIndex]);
 
   return (
     <section id="gallery" className="gallery-section">
@@ -200,7 +81,6 @@ export default function GallerySection({ language = "en" }) {
             <Camera size={15} />
             {isHindi ? "हमारी यादें" : "OUR MEMORIES"}
           </span>
-
           <h2 className="gallery-title">
             {isHindi ? (
               <>
@@ -212,13 +92,11 @@ export default function GallerySection({ language = "en" }) {
               </>
             )}
           </h2>
-
           <p className="gallery-description">
             {isHindi
               ? "हमारे खूबसूरत सफर की कुछ अनमोल झलकियाँ"
               : "A collection of little moments, beautiful memories, and a love story worth celebrating."}
           </p>
-
           <div className="gallery-heading-divider">
             <span />
             <Images size={17} />
@@ -230,7 +108,7 @@ export default function GallerySection({ language = "en" }) {
           <button
             type="button"
             className="gallery-arrow gallery-arrow-left"
-            onClick={() => scrollCarousel(-1)}
+            onClick={() => goToIndex(activeIndex - 1)}
             disabled={activeIndex === 0}
             aria-label="Previous photos"
           >
@@ -239,30 +117,27 @@ export default function GallerySection({ language = "en" }) {
 
           <div className="gallery-carousel" ref={carouselRef} onScroll={handleScroll}>
             {photos.map((photo) => (
-              <button
-                type="button"
-                className="gallery-card"
-                key={photo.src}
-                onClick={() => openPhoto(photo)}
-                aria-label={`View ${photo.alt}`}
-              >
+              <div className="gallery-card" key={photo.src}>
                 <div className="gallery-image-wrap">
-                  <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    loading="lazy"
+                    decoding="async"
+                    draggable="false"
+                  />
                   <div className="gallery-image-overlay">
                     <span className="gallery-photo-number">{photo.number}</span>
-                    <span className="gallery-view-label">
-                      {isHindi ? "तस्वीर देखें" : "VIEW PHOTO"}
-                    </span>
                   </div>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
 
           <button
             type="button"
             className="gallery-arrow gallery-arrow-right"
-            onClick={() => scrollCarousel(1)}
+            onClick={() => goToIndex(activeIndex + 1)}
             disabled={activeIndex >= maxIndex}
             aria-label="Next photos"
           >
@@ -272,125 +147,24 @@ export default function GallerySection({ language = "en" }) {
 
         <div className="gallery-bottom">
           <div className="gallery-progress">
-            {photos.map((photo, index) => (
+            {Array.from({ length: maxIndex + 1 }, (_, index) => (
               <button
                 type="button"
-                key={photo.src}
+                key={index}
                 className={`gallery-dot ${index === activeIndex ? "active" : ""}`}
-                onClick={() => {
-                  const carousel = carouselRef.current;
-                  const card = carousel?.querySelector(".gallery-card");
-                  if (!carousel || !card) return;
-
-                  const gap = parseFloat(getComputedStyle(carousel).columnGap) || 0;
-                  carousel.scrollTo({
-                    left: index * (card.getBoundingClientRect().width + gap),
-                    behavior: "smooth",
-                  });
-                }}
-                aria-label={`Go to photo ${index + 1}`}
+                onClick={() => goToIndex(index)}
+                aria-label={`Go to gallery position ${index + 1}`}
+                aria-current={index === activeIndex ? "true" : undefined}
               />
             ))}
           </div>
-
           <p className="gallery-count">
-            <span>{String(Math.min(activeIndex + 1, maxIndex + 1)).padStart(2, "0")}</span>
+            <span>{String(activeIndex + 1).padStart(2, "0")}</span>
             {" / "}
             {String(maxIndex + 1).padStart(2, "0")}
           </p>
         </div>
       </div>
-
-      {selectedPhoto && (
-        <div
-          ref={lightboxRef}
-          className="gallery-lightbox"
-          onClick={closeLightbox}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Photo viewer"
-        >
-          <button
-            type="button"
-            className="gallery-lightbox-close"
-            onClick={(event) => {
-              event.stopPropagation();
-              closeLightbox();
-            }}
-            aria-label="Close photo"
-            title="Close photo"
-          >
-            ×
-          </button>
-
-          <button
-            type="button"
-            className="gallery-lightbox-arrow gallery-lightbox-prev"
-            onClick={(event) => {
-              event.stopPropagation();
-              moveLightbox(-1);
-            }}
-            aria-label="Previous photo"
-          >
-            <ChevronLeft size={30} />
-          </button>
-
-          <img
-            src={selectedPhoto.src}
-            alt={selectedPhoto.alt}
-            className="lightbox-image"
-            style={{ transform: `scale(${zoom})` }}
-            onClick={(event) => event.stopPropagation()}
-            draggable="false"
-          />
-
-          <div className="gallery-zoom-controls" onClick={(event) => event.stopPropagation()}>
-            <button
-              type="button"
-              onClick={zoomOut}
-              disabled={zoom <= 1}
-              aria-label="Zoom out"
-              title="Zoom out"
-            >
-              −
-            </button>
-
-            <span>{Math.round(zoom * 100)}%</span>
-
-            <button
-              type="button"
-              onClick={zoomIn}
-              disabled={zoom >= 3}
-              aria-label="Zoom in"
-              title="Zoom in"
-            >
-              +
-            </button>
-
-            <button
-              type="button"
-              className="gallery-control-reset"
-              onClick={resetZoom}
-              aria-label="Reset zoom"
-              title="Reset zoom"
-            >
-              <RotateCcw size={18} />
-            </button>
-          </div>
-
-          <button
-            type="button"
-            className="gallery-lightbox-arrow gallery-lightbox-next"
-            onClick={(event) => {
-              event.stopPropagation();
-              moveLightbox(1);
-            }}
-            aria-label="Next photo"
-          >
-            <ChevronRight size={30} />
-          </button>
-        </div>
-      )}
     </section>
   );
 }

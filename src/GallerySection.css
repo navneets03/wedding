@@ -1,9 +1,4 @@
-/* =========================================
-   LUXURY WEDDING GALLERY
-   Midnight Blue & Gold
-   ========================================= */
-
-/* Section */
+/* LUXURY WEDDING GALLERY — Midnight Blue & Gold */
 .gallery-section {
   position: relative;
   overflow: hidden;
@@ -13,19 +8,15 @@
     var(--bg-0, #050b18);
   color: #f8f2e7;
 }
-
 .gallery-container {
   width: min(1180px, calc(100% - 64px));
   margin: 0 auto;
 }
-
-/* Heading */
 .gallery-heading {
   max-width: 680px;
   margin: 0 auto 48px;
   text-align: center;
 }
-
 .gallery-eyebrow {
   display: inline-flex;
   align-items: center;
@@ -36,7 +27,6 @@
   font-weight: 600;
   letter-spacing: 4px;
 }
-
 .gallery-title {
   margin: 18px 0 14px;
   color: #f8f2e7;
@@ -45,12 +35,10 @@
   font-weight: 500;
   line-height: 1.1;
 }
-
 .gallery-title span {
   color: var(--gold, #d8b66a);
   font-style: italic;
 }
-
 .gallery-description {
   max-width: 530px;
   margin: 0 auto;
@@ -58,7 +46,6 @@
   font-size: 14px;
   line-height: 1.9;
 }
-
 .gallery-heading-divider {
   display: flex;
   align-items: center;
@@ -67,22 +54,19 @@
   margin-top: 24px;
   color: var(--gold, #d8b66a);
 }
-
 .gallery-heading-divider span {
   width: 46px;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--gold, #d8b66a));
 }
-
 .gallery-heading-divider span:last-child {
   transform: rotate(180deg);
 }
 
-/* Carousel */
+/* Carousel and non-clickable image cards */
 .gallery-carousel-wrapper {
   position: relative;
 }
-
 .gallery-carousel {
   display: flex;
   gap: 24px;
@@ -93,12 +77,9 @@
   -ms-overflow-style: none;
   padding: 5px 2px 12px;
 }
-
 .gallery-carousel::-webkit-scrollbar {
   display: none;
 }
-
-/* Photo cards */
 .gallery-card {
   position: relative;
   flex: 0 0 calc((100% - 48px) / 3);
@@ -108,27 +89,16 @@
   border: 1px solid rgba(216, 182, 106, 0.24);
   border-radius: 5px;
   background: #0b162b;
-  cursor: pointer;
+  cursor: default;
   scroll-snap-align: start;
   text-align: left;
-  -webkit-tap-highlight-color: transparent;
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
 }
-
-.gallery-card:hover {
-  border-color: rgba(216, 182, 106, 0.8);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-}
-
 .gallery-image-wrap {
   position: relative;
   aspect-ratio: 4 / 5;
   overflow: hidden;
   background: #0b162b;
 }
-
 .gallery-image-wrap img {
   display: block;
   width: 100%;
@@ -138,10 +108,9 @@
   image-rendering: auto;
   filter: none;
   transform: none;
-  transition: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
-
-/* Image overlay */
 .gallery-image-overlay {
   position: absolute;
   inset: 0;
@@ -158,7 +127,6 @@
     rgba(3, 8, 18, 0.67) 100%
   );
 }
-
 .gallery-photo-number {
   align-self: flex-start;
   display: grid;
@@ -173,25 +141,7 @@
   backdrop-filter: blur(8px);
 }
 
-.gallery-view-label {
-  align-self: flex-start;
-  color: #fff;
-  font-size: 10px;
-  letter-spacing: 2.5px;
-  opacity: 0;
-  transform: translateY(8px);
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
-}
-
-.gallery-card:hover .gallery-view-label,
-.gallery-card:focus-visible .gallery-view-label {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Carousel navigation arrows */
+/* Navigation arrows */
 .gallery-arrow {
   position: absolute;
   z-index: 2;
@@ -200,6 +150,7 @@
   place-items: center;
   width: 46px;
   height: 46px;
+  padding: 0;
   border: 1px solid rgba(216, 182, 106, 0.6);
   border-radius: 50%;
   background: #0b162b;
@@ -212,40 +163,34 @@
     border-color 0.25s ease,
     opacity 0.25s ease;
 }
-
 .gallery-arrow:hover:not(:disabled) {
   border-color: var(--gold, #d8b66a);
   background: var(--gold, #d8b66a);
   color: #07101f;
 }
-
 .gallery-arrow:disabled {
   cursor: default;
   opacity: 0.28;
 }
-
 .gallery-arrow-left {
   left: -23px;
 }
-
 .gallery-arrow-right {
   right: -23px;
 }
 
-/* Dots and count */
+/* Pagination dots and count */
 .gallery-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 27px;
 }
-
 .gallery-progress {
   display: flex;
   align-items: center;
   gap: 9px;
 }
-
 .gallery-dot {
   width: 7px;
   height: 7px;
@@ -258,421 +203,103 @@
     width 0.3s ease,
     background 0.3s ease;
 }
-
 .gallery-dot.active {
   width: 27px;
   background: var(--gold, #d8b66a);
 }
-
 .gallery-count {
   margin: 0;
   color: rgba(248, 242, 231, 0.5);
   font-size: 11px;
   letter-spacing: 2px;
 }
-
 .gallery-count span {
   color: var(--gold, #d8b66a);
 }
-
-/* Lightbox.
-   The visual-viewport variables are set in GallerySection.jsx so the
-   overlay and its controls remain inside the visible area when the page
-   has already been pinch-zoomed on mobile. */
-.gallery-lightbox {
-  position: fixed;
-  top: var(--lightbox-top, 0px);
-  left: var(--lightbox-left, 0px);
-  width: var(--lightbox-width, 100vw);
-  height: var(--lightbox-height, 100dvh);
-  box-sizing: border-box;
-  z-index: 99999;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 66px 68px 82px;
-  overflow: hidden;
-  overscroll-behavior: contain;
-  background: rgba(2, 5, 12, 0.97);
-  backdrop-filter: blur(12px);
-  isolation: isolate;
-}
-
-.gallery-lightbox > img,
-.gallery-lightbox .lightbox-image {
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: min(100%, 1100px);
-  max-height: 100%;
-  object-fit: contain;
-  object-position: center;
-  image-rendering: auto;
-  filter: none;
-  border: 1px solid rgba(216, 182, 106, 0.3);
-  border-radius: 5px;
-  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
-  transform-origin: center center;
-  transition: transform 0.2s ease;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-/* Close button stays inside the visible lightbox viewport */
-.gallery-lightbox-close {
-  position: absolute;
-  top: max(10px, env(safe-area-inset-top));
-  right: max(10px, env(safe-area-inset-right));
-  z-index: 30;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 46px;
-  height: 46px;
-  padding: 0 0 3px;
-
-  border: 1px solid rgba(216, 182, 106, 0.65);
-  border-radius: 50%;
-  background: rgba(5, 11, 24, 0.95);
-  color: #fff;
-  font-family: Arial, sans-serif;
-  font-size: 32px;
-  line-height: 1;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.gallery-lightbox-arrow {
-  position: absolute;
-  top: 50%;
-  z-index: 10;
-
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  padding: 0;
-
-  border: 1px solid rgba(216, 182, 106, 0.5);
-  border-radius: 50%;
-  background: rgba(11, 22, 43, 0.92);
-  color: var(--gold, #d8b66a);
-  cursor: pointer;
-  transform: translateY(-50%);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.gallery-lightbox-prev {
-  left: 12px;
-}
-
-.gallery-lightbox-next {
-  right: 12px;
-}
-
-.gallery-lightbox-close:hover,
-.gallery-lightbox-arrow:hover {
-  background: var(--gold, #d8b66a);
-  color: #07101f;
-}
-
-/* Zoom controls stay in the bottom safe area of the visible viewport */
-.gallery-zoom-controls {
-  position: absolute;
-  left: 50%;
-  bottom: max(14px, env(safe-area-inset-bottom));
-  z-index: 30;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  max-width: calc(100% - 20px);
-  box-sizing: border-box;
-
-  padding: 7px 10px;
-  border: 1px solid rgba(216, 182, 106, 0.55);
-  border-radius: 30px;
-  background: rgba(5, 11, 24, 0.96);
-  color: #f3dda0;
-  backdrop-filter: blur(10px);
-  transform: translateX(-50%);
-}
-
-.gallery-zoom-controls button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 36px;
-  width: 36px;
-  min-width: 36px;
-  height: 36px;
-  padding: 0;
-  box-sizing: border-box;
-  border: 1px solid rgba(216, 182, 106, 0.4);
-  border-radius: 50%;
-  background: transparent;
-  color: #f3dda0;
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition:
-    background 0.2s ease,
-    opacity 0.2s ease;
-}
-
-.gallery-zoom-controls button:hover:not(:disabled) {
-  background: rgba(216, 182, 106, 0.2);
-}
-
-.gallery-zoom-controls button:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.gallery-zoom-controls span {
-  min-width: 44px;
-  text-align: center;
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-}
-
-.gallery-zoom-controls .gallery-control-reset {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 36px;
-  width: 36px;
-  min-width: 36px;
-  height: 36px;
-  padding: 0;
-  line-height: 1;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-/* Keyboard focus */
-.gallery-card:focus-visible,
 .gallery-arrow:focus-visible,
-.gallery-dot:focus-visible,
-.gallery-lightbox-close:focus-visible,
-.gallery-lightbox-arrow:focus-visible,
-.gallery-zoom-controls button:focus-visible {
+.gallery-dot:focus-visible {
   outline: 2px solid var(--gold, #d8b66a);
   outline-offset: 3px;
 }
 
-/* Tablet */
 @media (max-width: 900px) {
   .gallery-section {
     padding: 80px 0 70px;
   }
-
   .gallery-container {
     width: calc(100% - 64px);
   }
-
   .gallery-carousel {
     gap: 20px;
   }
-
   .gallery-card {
     flex-basis: calc((100% - 20px) / 2);
   }
-
   .gallery-arrow-left {
     left: -21px;
   }
-
   .gallery-arrow-right {
     right: -21px;
   }
-
-  .gallery-lightbox {
-    padding: 62px 58px 78px;
-  }
-
-  .gallery-lightbox-prev {
-    left: 8px;
-  }
-
-  .gallery-lightbox-next {
-    right: 8px;
-  }
 }
-
-/* Mobile */
 @media (max-width: 600px) {
   .gallery-section {
     padding: 65px 0 58px;
   }
-
   .gallery-container {
     width: calc(100% - 54px);
   }
-
   .gallery-heading {
     margin-bottom: 30px;
   }
-
   .gallery-eyebrow {
     font-size: 9px;
     letter-spacing: 3px;
   }
-
   .gallery-title {
     margin-top: 14px;
     font-size: clamp(38px, 10vw, 48px);
   }
-
   .gallery-description {
     max-width: 330px;
     font-size: 13px;
     line-height: 1.8;
   }
-
   .gallery-heading-divider {
     margin-top: 19px;
   }
-
   .gallery-carousel {
     gap: 14px;
     padding-bottom: 8px;
   }
-
   .gallery-card {
     flex-basis: 100%;
   }
-
   .gallery-image-wrap {
     aspect-ratio: 4 / 4.5;
   }
-
   .gallery-image-overlay {
     padding: 15px;
   }
-
-  .gallery-view-label {
-    opacity: 1;
-    transform: none;
-  }
-
   .gallery-arrow {
     width: 38px;
     height: 38px;
   }
-
   .gallery-arrow-left {
     left: -19px;
   }
-
   .gallery-arrow-right {
     right: -19px;
   }
-
   .gallery-bottom {
     margin-top: 20px;
   }
-
-  .gallery-lightbox {
-    padding: 64px 44px 76px;
-  }
-
-  .gallery-lightbox > img,
-  .gallery-lightbox .lightbox-image {
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-  .gallery-lightbox-close {
-    top: max(8px, env(safe-area-inset-top));
-    right: max(8px, env(safe-area-inset-right));
-    width: 44px;
-    height: 44px;
-    font-size: 31px;
-  }
-
-  .gallery-lightbox-arrow {
-    width: 34px;
-    height: 34px;
-  }
-
-  .gallery-lightbox-prev {
-    left: 4px;
-  }
-
-  .gallery-lightbox-next {
-    right: 4px;
-  }
-
-  .gallery-zoom-controls {
-    bottom: max(8px, env(safe-area-inset-bottom));
-    gap: 6px;
-    padding: 5px 7px;
-  }
-
-  .gallery-zoom-controls button,
-  .gallery-zoom-controls .gallery-control-reset {
-    flex-basis: 32px;
-    width: 32px;
-    min-width: 32px;
-    height: 32px;
-  }
-
-  .gallery-zoom-controls span {
-    min-width: 40px;
-    font-size: 12px;
-  }
 }
-
-/* Short screens in landscape orientation */
-@media (max-height: 480px) {
-  .gallery-lightbox {
-    padding-top: 54px;
-    padding-bottom: 64px;
-  }
-
-  .gallery-lightbox > img,
-  .gallery-lightbox .lightbox-image {
-    max-height: 100%;
-  }
-
-  .gallery-lightbox-close {
-    width: 38px;
-    height: 38px;
-    font-size: 28px;
-  }
-
-  .gallery-zoom-controls {
-    bottom: 5px;
-    padding: 4px 7px;
-  }
-
-  .gallery-zoom-controls button,
-  .gallery-zoom-controls .gallery-control-reset {
-    flex-basis: 30px;
-    width: 30px;
-    min-width: 30px;
-    height: 30px;
-  }
-}
-
-/* Reduced motion accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .gallery-card,
-  .gallery-image-wrap img,
   .gallery-arrow,
-  .gallery-dot,
-  .gallery-view-label,
-  .gallery-lightbox .lightbox-image {
+  .gallery-dot {
     transition: none;
   }
-
   .gallery-carousel {
     scroll-behavior: auto;
   }
