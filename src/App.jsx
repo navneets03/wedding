@@ -584,7 +584,7 @@ export default function App() {
           <div className="hero-image-wrap reveal-right" data-reveal>
             <img
               className="hero-img"
-              src={`${import.meta.env.BASE_URL}hero.png`}
+              src={`${import.meta.env.BASE_URL}hero.webp`}
               alt={t("Navneet and Muskan", "नवनीत और मुस्कान")}
             />
           </div>
@@ -654,7 +654,7 @@ export default function App() {
           <div className="venue-container">
             <div className="venue-image reveal-left" data-reveal>
               <img
-                src={`${import.meta.env.BASE_URL}decor.png`}
+                src={`${import.meta.env.BASE_URL}decor.webp`}
                 alt={t("Wedding venue for Navneet and Muskan", "नवनीत और मुस्कान का विवाह स्थल")}
                 loading="lazy"
               />
